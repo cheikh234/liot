@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bassirou Mbacké — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+<style>
+:root {
+  --sable: #d4c4a0;
+  --sable2: #e8dcc4;
+  --creme: #f2ede4;
+  --noir: #080808;
+  --argent: #a8a8a8;
+  --muted: #7a7060;
+  --dim: #4a4438;
+  --border: rgba(200,184,150,0.12);
+  --border-h: rgba(200,184,150,0.4);
+  --grd-sable: linear-gradient(135deg, #d4c4a0 0%, #c8b896 50%, #b8a880 100%);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #080808;
+  color: var(--creme);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* GRAIN */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 9990; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+  opacity: .028; mix-blend-mode: overlay;
+}
+
+/* GLOBAL GRID */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(212,196,160,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212,196,160,.05) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, black 0%, transparent 80%);
+}
+
+/* CURSOR */
+#cur1 { width:8px; height:8px; background:var(--sable); border-radius:50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9999; mix-blend-mode:difference; }
+#cur2 { width:36px; height:36px; border:1px solid rgba(212,196,160,.5); border-radius:50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9998; transition:width .4s, height .4s, opacity .4s, border-color .4s; }
+#cur2.expand { width:60px; height:60px; border-color:rgba(212,196,160,.8); opacity:.7; }
+@media(max-width:768px){ #cur1,#cur2 { display:none; } body { cursor:auto; } }
+
+/* LOADER */
+#ld { position:fixed; inset:0; background:#080808; z-index:9500; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2rem; transition:opacity 1.2s, visibility 1.2s; }
+#ld.gone { opacity:0; visibility:hidden; }
+.ld-letters { font-family:'Cormorant Garamond',serif; font-size:5rem; font-weight:300; letter-spacing:.18em; background:var(--grd-sable); -webkit-background-clip:text; background-clip:text; color:transparent; animation:shimmer 2s ease-in-out infinite; }
+.ld-line { width:120px; height:1px; background:linear-gradient(90deg,transparent,var(--sable),transparent); transform:scaleX(0); animation:ldLine 2.4s cubic-bezier(.4,0,.2,1) forwards; }
+@keyframes shimmer { 0%,100%{opacity:1;filter:brightness(1)} 50%{opacity:.6;filter:brightness(1.3)} }
+@keyframes ldLine { to { transform:scaleX(1); } }
+@keyframes slideUp { from{opacity:0;transform:translateY(40px)} to{opacity:1;transform:none} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes dotPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.5)} }
+@keyframes scrollTrack { 0%{left:-100%} 100%{left:100%} }
+@keyframes meshFloat { 0%,100%{transform:scale(1)} 33%{transform:scale(1.03) rotate(.5deg)} 66%{transform:scale(.98) rotate(-.3deg)} }
+@keyframes beamPulse { 0%,100%{opacity:.6} 50%{opacity:1} }
+@keyframes marquee { to { transform:translateX(-50%); } }
+@keyframes lampSway { 0%,100%{transform:translateX(-50%) rotate(-2deg);filter:brightness(1)} 50%{transform:translateX(-50%) rotate(2deg);filter:brightness(1.15)} }
+
+/* GRAD TEXT */
+.grad-text { background:var(--grd-sable); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+
+/* SECTION GRID */
+.sec-grid { position:absolute; inset:0; pointer-events:none; z-index:0;
+  background-image: linear-gradient(rgba(212,196,160,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(212,196,160,.04) 1px, transparent 1px);
+  background-size:52px 52px; }
+
+/* LAMP */
+.lamp { position:absolute; pointer-events:none; z-index:1; }
+.lamp-top { top:-1px; left:50%; transform:translateX(-50%); width:min(700px,100vw); height:600px;
+  background:conic-gradient(from 270deg at 50% 0%, transparent 20%, rgba(212,196,160,.04) 30%, rgba(212,196,160,.13) 42%, rgba(232,220,196,.18) 50%, rgba(212,196,160,.13) 58%, rgba(212,196,160,.04) 70%, transparent 80%);
+  animation:lampSway 8s ease-in-out infinite; }
+.lamp-halo { position:absolute; top:-1px; height:3px; background:linear-gradient(90deg,transparent,rgba(212,196,160,.5),transparent); border-radius:50%; filter:blur(2px); width:200px; left:50%; transform:translateX(-50%); }
+.hero-mesh { position:absolute; inset:0; z-index:0;
+  background: radial-gradient(ellipse 60% 50% at 80% 20%, rgba(212,196,160,.08) 0%, transparent 60%), radial-gradient(ellipse 40% 60% at 20% 80%, rgba(200,184,150,.05) 0%, transparent 55%);
+  animation:meshFloat 12s ease-in-out infinite; }
+.hero-beam { position:absolute; top:-20%; right:10%; width:1px; height:140%; background:linear-gradient(to bottom,transparent 0%,rgba(212,196,160,.06) 30%,rgba(212,196,160,.12) 50%,rgba(212,196,160,.06) 70%,transparent 100%); transform:rotate(-15deg); animation:beamPulse 6s ease-in-out infinite; }
+
+/* NAV */
+nav { position:fixed; top:0; width:100%; z-index:800; display:flex; align-items:center; justify-content:space-between; padding:1.4rem 5vw; transition:all .6s cubic-bezier(.4,0,.2,1); }
+nav.sc { background:rgba(8,8,8,.88); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); padding:1rem 5vw; }
+
+/* REVEAL */
+.rv { opacity:0; transform:translateY(32px); transition:all .9s cubic-bezier(.16,1,.3,1); }
+.rv.vis { opacity:1; transform:none; }
+.fade-left { opacity:0; transform:translateX(-40px); transition:all .9s cubic-bezier(.16,1,.3,1); }
+.fade-right { opacity:0; transform:translateX(40px); transition:all .9s cubic-bezier(.16,1,.3,1); }
+.fade-scale { opacity:0; transform:scale(.92); transition:all .9s cubic-bezier(.16,1,.3,1); }
+.fade-left.vis, .fade-right.vis, .fade-scale.vis { opacity:1; transform:none; }
+.stagger-1 { transition-delay:.1s !important; }
+.stagger-2 { transition-delay:.2s !important; }
+.stagger-3 { transition-delay:.3s !important; }
+.stagger-4 { transition-delay:.4s !important; }
+.stagger-5 { transition-delay:.5s !important; }
+
+/* TIMELINE */
+.timeline::before { content:''; position:absolute; left:1.4rem; top:0; bottom:0; width:1px; background:linear-gradient(to bottom, transparent, rgba(212,196,160,.2) 10%, rgba(212,196,160,.2) 90%, transparent); }
+
+/* ORNEMENTS portrait */
+.orn { position:absolute; width:24px; height:24px; }
+.orn::before,.orn::after { content:''; position:absolute; background:var(--sable); border-radius:0; }
+.orn-tl { top:20px; left:20px; }
+.orn-tl::before { width:1px; height:20px; top:0; left:0; }
+.orn-tl::after { height:1px; width:20px; top:0; left:0; }
+.orn-tr { top:20px; right:20px; }
+.orn-tr::before { width:1px; height:20px; top:0; right:0; }
+.orn-tr::after { height:1px; width:20px; top:0; right:0; }
+.orn-bl { bottom:20px; left:20px; }
+.orn-bl::before { width:1px; height:20px; bottom:0; left:0; }
+.orn-bl::after { height:1px; width:20px; bottom:0; left:0; }
+.orn-br { bottom:20px; right:20px; }
+.orn-br::before { width:1px; height:20px; bottom:0; right:0; }
+.orn-br::after { height:1px; width:20px; bottom:0; right:0; }
+
+/* PORTRAIT hover */
+.portrait-hover { position:absolute; inset:0; background:rgba(8,8,8,.9); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:1rem; opacity:0; transition:opacity .5s; backdrop-filter:blur(8px); border-radius:3px; }
+.portrait-frame:hover .portrait-hover { opacity:1; }
+
+/* STEP CARDS — all white theme */
+.step-ribbon { border-radius:6px; box-shadow:0 8px 30px rgba(0,0,0,.5); position:relative; overflow:hidden; transition:all .3s; }
+.step-ribbon::after { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:rgba(255,255,255,.15); }
+
+/* Arrow for step cards */
+.arrow-right::after { content:''; position:absolute; top:50%; right:-14px; transform:translateY(-50%); width:0; height:0; border-top:12px solid transparent; border-bottom:12px solid transparent; border-left:14px solid #161410; z-index:3; }
+.arrow-left::after { content:''; position:absolute; top:50%; left:-14px; transform:translateY(-50%); width:0; height:0; border-top:12px solid transparent; border-bottom:12px solid transparent; border-right:14px solid #161410; z-index:3; }
+@media(max-width:700px) {
+  .arrow-right::after, .arrow-left::after { display:none; }
+}
+
+/* VERTICAL LINE STEPS */
+.steps-line::before { content:''; position:absolute; left:50%; top:0; bottom:0; width:1px; background:linear-gradient(to bottom,transparent,rgba(212,196,160,.2) 5%,rgba(212,196,160,.3) 50%,rgba(212,196,160,.2) 95%,transparent); transform:translateX(-50%); }
+@media(max-width:700px){
+  .steps-line::before { left:28px; transform:none; }
+}
+
+/* Animations step entry */
+.step-item:nth-child(odd) { transform:translateX(-20px); opacity:0; }
+.step-item:nth-child(even) { transform:translateX(20px); opacity:0; }
+.step-item.vis { transform:none !important; opacity:1 !important; }
+.step-item { transition:all .7s cubic-bezier(.16,1,.3,1); }
+
+/* SCRL indicator */
+.scrl-track { width:40px; height:1px; background:rgba(212,196,160,.15); position:relative; overflow:hidden; }
+.scrl-thumb { position:absolute; top:0; left:-100%; width:100%; height:1px; background:var(--grd-sable); animation:scrollTrack 2s ease-in-out infinite; }
+
+/* DOT PULSE */
+.dot-pulse { animation:dotPulse 2.5s ease-in-out infinite; }
+
+/* HEY LINE */
+.hey-line { width:30px; height:1px; background:var(--grd-sable); flex-shrink:0; }
+
+/* PROJECT FILTER */
+.pfbtn { padding:.4rem 1.2rem; border:1px solid var(--border); background:none; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:.68rem; font-weight:400; letter-spacing:.18em; text-transform:uppercase; cursor:pointer; border-radius:2px; transition:all .3s; }
+.pfbtn.on { background:rgba(212,196,160,.06); border-color:var(--border-h); color:var(--sable2); }
+.pfbtn:hover:not(.on) { border-color:rgba(212,196,160,.2); color:var(--argent); }
+
+/* PCARD */
+.pcard { display:none; flex-direction:column; background:#0f0f0f; transition:all .5s cubic-bezier(.16,1,.3,1); position:relative; overflow:hidden; border:1px solid var(--border); border-radius:6px; }
+.pcard.show { display:flex; }
+.pcard:hover { background:#131210; box-shadow:0 0 60px rgba(0,0,0,.8); border-color:var(--border-h); }
+
+.pthumb { aspect-ratio:16/10; position:relative; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#0a0a0a; }
+.pthumb img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; transition:transform .6s cubic-bezier(.16,1,.3,1); }
+.pcard:hover .pthumb img { transform:scale(1.05); }
+.phov { position:absolute; inset:0; background:rgba(8,8,8,.92); display:flex; align-items:center; justify-content:center; gap:.8rem; opacity:0; transition:opacity .4s; backdrop-filter:blur(8px); }
+.pcard:hover .phov { opacity:1; }
+.plnk { width:44px; height:44px; border-radius:50%; border:1px solid rgba(212,196,160,.4); display:flex; align-items:center; justify-content:center; color:var(--sable2); text-decoration:none; font-size:.85rem; background:rgba(212,196,160,.05); transition:all .25s; }
+.plnk:hover { background:var(--sable); color:var(--noir); transform:scale(1.1); }
+
+/* NAV CTA */
+.ncta { padding:.5rem 1.6rem; border:1px solid var(--border-h); border-radius:2px; background:transparent; color:var(--sable2); font-size:.68rem; font-weight:500; letter-spacing:.18em; text-transform:uppercase; text-decoration:none; transition:all .4s; position:relative; overflow:hidden; }
+.ncta::before { content:''; position:absolute; inset:0; background:var(--grd-sable); transform:scaleX(0); transform-origin:left; transition:transform .4s cubic-bezier(.4,0,.2,1); z-index:-1; }
+.ncta:hover { color:var(--noir); border-color:transparent; }
+.ncta:hover::before { transform:scaleX(1); }
+
+/* FORM */
+.fi,.fta { background:rgba(212,196,160,.02); border:1px solid var(--border); border-radius:4px; padding:.8rem 1.1rem; color:var(--creme); font-family:'DM Sans',sans-serif; font-size:.88rem; font-weight:300; outline:none; transition:border-color .3s,background .3s; width:100%; }
+.fi:focus,.fta:focus { border-color:rgba(212,196,160,.45); background:rgba(212,196,160,.04); }
+.fi::placeholder,.fta::placeholder { color:var(--dim); }
+.fta { min-height:120px; resize:vertical; }
+
+/* FSUB */
+.fsub { display:flex; align-items:center; justify-content:center; gap:.7rem; background:var(--grd-sable); color:var(--noir); border:none; border-radius:4px; padding:.9rem 2rem; font-family:'DM Sans',sans-serif; font-size:.75rem; font-weight:600; cursor:pointer; letter-spacing:.18em; text-transform:uppercase; width:100%; transition:all .4s; box-shadow:0 8px 30px rgba(212,196,160,.15); }
+.fsub:hover { transform:translateY(-2px); box-shadow:0 20px 50px rgba(212,196,160,.25); }
+
+/* CLINK */
+.clink { display:flex; align-items:center; gap:1rem; padding:.9rem 1.2rem; border:1px solid var(--border); background:rgba(212,196,160,.02); border-radius:4px; text-decoration:none; color:var(--creme); transition:all .35s; }
+.clink:hover { border-color:var(--border-h); transform:translateX(6px); background:rgba(212,196,160,.04); }
+
+/* C2SOC */
+.c2soc { display:flex; align-items:center; gap:.6rem; padding:.65rem 1.1rem; border:1px solid var(--border); border-radius:4px; background:rgba(212,196,160,.03); color:var(--argent2); text-decoration:none; font-size:.72rem; font-weight:400; letter-spacing:.12em; text-transform:uppercase; transition:all .3s; }
+.c2soc:hover { background:rgba(212,196,160,.08); border-color:var(--border-h); color:var(--sable2); transform:translateY(-2px); }
+
+/* FSOC */
+.fsoc { width:32px; height:32px; border-radius:4px; background:rgba(212,196,160,.03); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--dim); text-decoration:none; font-size:.78rem; transition:all .3s; }
+.fsoc:hover { color:var(--sable2); border-color:var(--border-h); transform:translateY(-2px); }
+
+/* IROW */
+.irow { display:flex; align-items:center; gap:1rem; padding:.7rem 1.2rem; background:rgba(212,196,160,.02); border:1px solid var(--border); border-radius:4px; font-size:.85rem; transition:all .3s; }
+.irow:hover { border-color:var(--border-h); background:rgba(212,196,160,.04); transform:translateX(4px); }
+
+/* ICO-CELL */
+.ico-cell { aspect-ratio:1; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:.5rem; background:rgba(212,196,160,.02); border:1px solid var(--border); border-radius:6px; transition:all .4s cubic-bezier(.4,0,.2,1); position:relative; overflow:hidden; }
+.ico-cell:hover { border-color:var(--border-h); transform:translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,.4); background:rgba(212,196,160,.04); }
+
+/* HSTAT */
+.hstat { padding:1.5rem 1.8rem; transition:all .3s; border-bottom:1px solid var(--border); position:relative; overflow:hidden; }
+.hstat::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:var(--grd-sable); transform:scaleY(0); transform-origin:bottom; transition:transform .4s cubic-bezier(.4,0,.2,1); }
+.hstat:hover::before { transform:scaleY(1); }
+.hstat:hover { background:rgba(212,196,160,.03); transform:translateX(-4px); }
+
+/* BTN PRIMARY */
+.btn-primary { display:inline-flex; align-items:center; gap:.7rem; background:var(--grd-sable); color:var(--noir); padding:.85rem 2.2rem; border-radius:4px; font-size:.75rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; text-decoration:none; transition:all .4s; box-shadow:0 8px 40px rgba(212,196,160,.15); }
+.btn-primary:hover { transform:translateY(-3px); box-shadow:0 20px 60px rgba(212,196,160,.25); }
+.btn-ghost { display:inline-flex; align-items:center; gap:.7rem; border:1px solid var(--border); color:var(--sable2); padding:.85rem 2.2rem; border-radius:4px; font-size:.75rem; font-weight:400; letter-spacing:.18em; text-transform:uppercase; text-decoration:none; transition:all .4s; background:rgba(212,196,160,.02); }
+.btn-ghost:hover { border-color:var(--border-h); color:var(--sable2); transform:translateY(-2px); }
+
+/* MARQUEE */
+.mq { display:flex; animation:marquee 35s linear infinite; width:max-content; }
+.mq-wrap { overflow:hidden; position:relative; }
+.mq-wrap::before,.mq-wrap::after { content:''; position:absolute; top:0; bottom:0; width:80px; z-index:1; pointer-events:none; }
+.mq-wrap::before { left:0; background:linear-gradient(90deg,#080808,transparent); }
+.mq-wrap::after { right:0; background:linear-gradient(-90deg,#080808,transparent); }
+
+/* NLINKS mobile */
+#nlinks { list-style:none; }
+@media(max-width:768px){
+  #nlinks {
+    position:fixed; inset:0; background:rgba(8,8,8,.98); backdrop-filter:blur(24px);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2.5rem;
+    z-index:700; transform:translateX(100%); transition:transform .4s cubic-bezier(.16,1,.3,1);
+  }
+  #nlinks.mobile-open { transform:none; }
+}
+
+/* LIGHTBOX */
+#lightbox { display:none; position:fixed; inset:0; z-index:9800; background:rgba(0,0,0,.96); backdrop-filter:blur(16px); flex-direction:column; align-items:center; justify-content:center; }
+#lightbox.open { display:flex; }
+.lb-img { max-width:100%; max-height:80vh; object-fit:contain; border-radius:4px; box-shadow:0 40px 100px rgba(0,0,0,.8); }
+.lb-dot { width:6px; height:6px; border-radius:50%; background:rgba(212,196,160,.25); transition:all .3s; cursor:pointer; }
+.lb-dot.on { background:var(--sable); transform:scale(1.4); }
+@keyframes lbIn { from{opacity:0;transform:scale(.9)} to{opacity:1;transform:scale(1)} }
+
+/* VIDEO MODAL */
+#vid-modal { display:none; position:fixed; inset:0; z-index:9800; background:rgba(0,0,0,.98); backdrop-filter:blur(20px); flex-direction:column; align-items:center; justify-content:center; }
+#vid-modal.open { display:flex; }
+
+/* STEP TAG */
+.stag { display:inline-flex; align-items:center; gap:.3rem; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); border-radius:20px; padding:.2rem .65rem; font-size:.68rem; color:rgba(255,255,255,.75); transition:all .25s; }
+.stag:hover { background:rgba(255,255,255,.1); color:#fff; border-color:rgba(255,255,255,.3); transform:translateY(-1px); }
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="ld">
+  <div class="ld-letters">BM</div>
+  <div class="ld-line mt-4"></div>
+  <p style="font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-top:.5rem">Chargement en cours</p>
+</div>
+
+<!-- CURSORS -->
+<div id="cur1"></div>
+<div id="cur2"></div>
+
+<!-- ═══ NAV ═══ -->
+<nav id="nav">
+  <a href="#hero" style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;letter-spacing:.15em;text-decoration:none;" class="grad-text">B. Mbacké</a>
+  <div class="flex items-center gap-6 lg:gap-10">
+    <ul class="hidden md:flex gap-8" id="nlinks">
+      <li><a href="#about" style="font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--argent);text-decoration:none;transition:color .3s;" onmouseover="this.style.color='var(--creme)'" onmouseout="this.style.color='var(--argent)'">À propos</a></li>
+      <li><a href="#skills" style="font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--argent);text-decoration:none;transition:color .3s;" onmouseover="this.style.color='var(--creme)'" onmouseout="this.style.color='var(--argent)'">Skills</a></li>
+      <li><a href="#formation" style="font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--argent);text-decoration:none;transition:color .3s;" onmouseover="this.style.color='var(--creme)'" onmouseout="this.style.color='var(--argent)'">Parcours</a></li>
+      <li><a href="#projets" style="font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--argent);text-decoration:none;transition:color .3s;" onmouseover="this.style.color='var(--creme)'" onmouseout="this.style.color='var(--argent)'">Projets</a></li>
+      <li><a href="#contact" style="font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--argent);text-decoration:none;transition:color .3s;" onmouseover="this.style.color='var(--creme)'" onmouseout="this.style.color='var(--argent)'">Contact</a></li>
+    </ul>
+    <a href="mailto:cheikhbass2001@gmail.com" class="ncta hidden md:inline-flex">Embauche-moi</a>
+    <!-- Hamburger -->
+    <div class="md:hidden flex flex-col gap-[5px] cursor-pointer p-2 z-[900]" id="ham" onclick="toggleMenu()">
+      <span id="ham1" class="block w-[22px] h-[1.5px] bg-[#d4c4a0] rounded transition-all duration-300"></span>
+      <span id="ham2" class="block w-[22px] h-[1.5px] bg-[#d4c4a0] rounded transition-all duration-300"></span>
+      <span id="ham3" class="block w-[22px] h-[1.5px] bg-[#d4c4a0] rounded transition-all duration-300"></span>
+    </div>
+    <!-- Mobile menu -->
+    <ul id="nlinks" class="md:hidden fixed inset-0 bg-[rgba(8,8,8,.98)] backdrop-blur-2xl flex flex-col items-center justify-center gap-10 z-[700] translate-x-full transition-transform duration-500" style="list-style:none">
+      <li><a href="#about" onclick="closeMenu()" style="font-size:1.2rem;letter-spacing:.2em;color:var(--creme);text-decoration:none">À propos</a></li>
+      <li><a href="#skills" onclick="closeMenu()" style="font-size:1.2rem;letter-spacing:.2em;color:var(--creme);text-decoration:none">Skills</a></li>
+      <li><a href="#formation" onclick="closeMenu()" style="font-size:1.2rem;letter-spacing:.2em;color:var(--creme);text-decoration:none">Parcours</a></li>
+      <li><a href="#projets" onclick="closeMenu()" style="font-size:1.2rem;letter-spacing:.2em;color:var(--creme);text-decoration:none">Projets</a></li>
+      <li><a href="#contact" onclick="closeMenu()" style="font-size:1.2rem;letter-spacing:.2em;color:var(--creme);text-decoration:none">Contact</a></li>
+      <li><a href="mailto:cheikhbass2001@gmail.com" class="btn-primary">Embauche-moi</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero" class="relative min-h-screen flex flex-col justify-center overflow-hidden"
+  style="padding:10rem 5vw 5rem;background:radial-gradient(ellipse 100% 70% at 70% 10%, #2a2316 0%, #18140c 25%, #0a0906 50%, #080808 100%)">
+  <div class="sec-grid" style="mask-image:radial-gradient(ellipse 80% 90% at 50% 0%, black 20%, transparent 80%)"></div>
+  <div class="lamp lamp-top"><div class="lamp-halo"></div></div>
+  <div class="hero-mesh"></div>
+  <div class="hero-beam"></div>
+  <div class="hero-beam" style="right:25%;opacity:.4;animation-delay:-2s"></div>
+  <div class="hero-beam" style="right:5%;opacity:.2;animation-delay:-4s"></div>
+
+  <div class="relative z-10 max-w-3xl">
+    <!-- Badge -->
+    <div class="inline-flex items-center gap-3 mb-10" style="opacity:0;animation:slideUp .8s .4s both">
+      <div class="hey-line"></div>
+      <div class="dot-pulse w-[5px] h-[5px] rounded-full bg-[#d4c4a0]"></div>
+      <span style="font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--argent)">Disponible — Dakar, Sénégal 🇸🇳</span>
+    </div>
+
+    <h1 style="font-family:'Cormorant Garamond',serif;line-height:.85;font-weight:300;opacity:0;animation:slideUp 1s .55s both;font-size:clamp(4rem,12vw,10rem)">
+      <span class="block" style="color:var(--creme);font-style:italic">Bassirou</span>
+      <span class="block grad-text" style="font-style:normal;font-weight:600;filter:drop-shadow(0 2px 40px rgba(212,196,160,.2))">Mbacké</span>
+      <span class="block" style="font-size:clamp(.9rem,2.5vw,1.6rem);font-weight:300;font-style:italic;color:var(--argent);letter-spacing:.25em;margin-top:.5rem">Développeur Web &amp; Mobile</span>
+    </h1>
+
+    <p style="margin-top:2.5rem;max-width:480px;font-size:.95rem;color:var(--argent);line-height:1.85;font-weight:300;opacity:0;animation:slideUp .8s .75s both">
+      Développeur <strong style="color:var(--sable2);font-weight:500">front-end passionné</strong>, formé à Bakeli School of Technology.
+      Je construis des interfaces modernes, rapides et inoubliables — où la technologie rencontre l'élégance.
+    </p>
+
+    <div class="flex flex-wrap gap-4 mt-10" style="opacity:0;animation:slideUp .8s .9s both">
+      <a href="#projets" class="btn-primary"><i class="fa-solid fa-arrow-right"></i>Voir mes projets</a>
+      <a href="#contact" class="btn-ghost"><i class="fa-regular fa-envelope"></i>Me contacter</a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="hidden xl:flex flex-col absolute right-[5vw] top-1/2 -translate-y-1/2 z-10 border-l" style="border-color:var(--border);opacity:0;animation:fadeIn .8s 1.2s both">
+    <div class="hstat"><div class="grad-text" style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;line-height:1" id="cnt1">3</div><div style="font-size:.62rem;color:var(--muted);margin-top:.3rem;letter-spacing:.1em;text-transform:uppercase">Mois chez Volkeno</div></div>
+    <div class="hstat"><div class="grad-text" style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;line-height:1" id="cnt2">7+</div><div style="font-size:.62rem;color:var(--muted);margin-top:.3rem;letter-spacing:.1em;text-transform:uppercase">Projets réalisés</div></div>
+    <div class="hstat"><div class="grad-text" style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;line-height:1" id="cnt3">4</div><div style="font-size:.62rem;color:var(--muted);margin-top:.3rem;letter-spacing:.1em;text-transform:uppercase">Domaines maîtrisés</div></div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-12 left-[5vw] flex items-center gap-4 z-10" style="font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:var(--dim);opacity:0;animation:fadeIn .8s 1.5s both">
+    <div class="scrl-track"><div class="scrl-thumb"></div></div>
+    Défiler
+  </div>
+
+  <!-- Year -->
+  <div class="absolute bottom-12 right-[5vw] z-10 pointer-events-none select-none" style="font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:300;color:rgba(212,196,160,.04);letter-spacing:.1em">2025</div>
+</section>
+
+<!-- ═══ MARQUEE ═══ -->
+<div class="mq-wrap py-5 border-y" style="border-color:var(--border);background:linear-gradient(90deg,#080808 0%,#0f0d0a 50%,#080808 100%)">
+  <div class="mq">
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-brands fa-html5 text-base" style="color:#e44d26"></i>HTML5<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-brands fa-css3-alt text-base" style="color:#264de4"></i>CSS3<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-brands fa-js text-base" style="color:#f7df1e"></i>JavaScript<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-brands fa-react text-base" style="color:#61dafb"></i>React JS<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-solid fa-wind text-base" style="color:#38bdf8"></i>Tailwind<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-brands fa-bootstrap text-base" style="color:#7952b3"></i>Bootstrap<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-brands fa-python text-base" style="color:#4584b6"></i>Python<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-brands fa-git-alt text-base" style="color:#f05032"></i>Git<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-brands fa-github text-base"></i>GitHub<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-solid fa-pen-nib text-base" style="color:#ff9a00"></i>Illustrator<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <!-- duplicate -->
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-brands fa-html5 text-base" style="color:#e44d26"></i>HTML5<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-brands fa-css3-alt text-base" style="color:#264de4"></i>CSS3<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-brands fa-js text-base" style="color:#f7df1e"></i>JavaScript<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-brands fa-react text-base" style="color:#61dafb"></i>React JS<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-solid fa-wind text-base" style="color:#38bdf8"></i>Tailwind<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-brands fa-bootstrap text-base" style="color:#7952b3"></i>Bootstrap<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-brands fa-python text-base" style="color:#4584b6"></i>Python<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-brands fa-git-alt text-base" style="color:#f05032"></i>Git<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-brands fa-github text-base"></i>GitHub<span style="color:rgba(212,196,160,.25)">·</span></span>
+    <span class="inline-flex items-center gap-2 px-8 whitespace-nowrap" style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)"><i class="fa-solid fa-pen-nib text-base" style="color:#ff9a00"></i>Illustrator<span style="color:rgba(212,196,160,.25)">·</span></span>
+  </div>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<section id="about" class="relative py-24 sm:py-32 px-[5vw]"
+  style="background:linear-gradient(160deg,#080808 0%,#0d0b08 40%,#131008 60%,#0a0808 100%)">
+  <div class="sec-grid"></div>
+  <div class="lamp lamp-top"><div class="lamp-halo"></div></div>
+
+  <div class="relative z-10">
+    <div class="flex items-center gap-3 mb-3">
+      <div class="w-7 h-px" style="background:var(--grd-sable)"></div>
+      <span style="font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sable);font-weight:500">À propos</span>
+    </div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:300;letter-spacing:.02em;line-height:.9;margin-bottom:1.5rem">
+      Un développeur<br><em class="grad-text">créatif</em> à Dakar
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 mt-16 items-center">
+      <!-- Portrait -->
+      <div class="relative rv">
+        <div class="portrait-frame relative w-full rounded overflow-hidden border" style="aspect-ratio:3/4;border-color:var(--border);background:linear-gradient(145deg,#1a1610,#0d0b08)">
+          <img src="moi.jpg" alt="Bassirou Mbacké" class="absolute inset-0 w-full h-full object-cover" style="object-position:center top;transition:transform .6s cubic-bezier(.16,1,.3,1)" onerror="this.style.display='none'">
+          <i class="fa-solid fa-user-tie absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[6rem]" style="color:rgba(212,196,160,.1)"></i>
+          <div class="orn orn-tl"></div><div class="orn orn-tr"></div>
+          <div class="orn orn-bl"></div><div class="orn orn-br"></div>
+          <div class="portrait-hover">
+            <h3 class="grad-text" style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;letter-spacing:.08em">Bassirou Mbacké</h3>
+            <p style="color:var(--argent);font-size:.8rem;text-align:center;line-height:1.6;max-width:200px">Développeur Front-End · Graphiste · Dakar, Sénégal</p>
+          </div>
+        </div>
+        <!-- Float badge -->
+        <div class="absolute -bottom-6 -right-4 sm:-bottom-8 sm:-right-8 rounded border p-4 sm:p-6" style="background:rgba(8,8,8,.97);border-color:var(--border-h);box-shadow:0 20px 60px rgba(0,0,0,.6)">
+          <div class="grad-text" style="font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;line-height:1">3</div>
+          <div style="font-size:.62rem;color:var(--muted);margin-top:.3rem;letter-spacing:.1em;text-transform:uppercase">Mois chez Volkeno</div>
+        </div>
+      </div>
+
+      <!-- Text -->
+      <div class="rv mt-8 lg:mt-0">
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;letter-spacing:.04em;margin-bottom:1.5rem;line-height:1.2;color:var(--creme)">
+          Je transforme tes idées en <em class="grad-text">expériences digitales</em>.
+        </h3>
+        <p style="color:var(--argent);line-height:1.85;margin-bottom:1rem;font-size:.92rem;font-weight:300">
+          Je m'appelle <strong style="color:var(--sable2);font-weight:500">Bassirou Mbacké</strong>, développeur Web &amp; Mobile passionné et graphiste autodidacte. Je combine développement et design pour créer des applications <strong style="color:var(--sable2);font-weight:500">fonctionnelles, esthétiques et intuitives</strong>.
+        </p>
+        <p style="color:var(--argent);line-height:1.85;margin-bottom:1rem;font-size:.92rem;font-weight:300">
+          Curieux, autonome et rigoureux, je sais travailler en équipe, collaborer sur des projets et gérer des missions efficacement.
+        </p>
+        <p style="color:var(--argent);line-height:1.85;margin-bottom:1.5rem;font-size:.92rem;font-weight:300">
+          Formé à la <strong style="color:var(--sable2);font-weight:500">Bakeli School of Technology</strong>, j'ai effectué un stage de 3 mois chez <strong style="color:var(--sable2);font-weight:500">Volkeno</strong> où j'ai livré des projets en <strong style="color:var(--sable2);font-weight:500">React JS</strong> et <strong style="color:var(--sable2);font-weight:500">React Native</strong>.
+        </p>
+        <div class="flex flex-col gap-2 mt-6">
+          <div class="irow"><i class="fa-solid fa-phone text-sm w-4 text-center flex-shrink-0" style="color:var(--sable)"></i><span>+221 77 661 66 19</span></div>
+          <div class="irow"><i class="fa-solid fa-envelope text-sm w-4 text-center flex-shrink-0" style="color:var(--sable)"></i><a href="mailto:cheikhbass2001@gmail.com" style="color:var(--creme);text-decoration:none">cheikhbass2001@gmail.com</a></div>
+          <div class="irow"><i class="fa-solid fa-location-dot text-sm w-4 text-center flex-shrink-0" style="color:var(--sable)"></i><span>Dakar, Sénégal 🇸🇳</span></div>
+          <div class="irow"><i class="fa-brands fa-github text-sm w-4 text-center flex-shrink-0" style="color:var(--sable)"></i><a href="#" style="color:var(--creme);text-decoration:none">github.com/bassirou-mbacke</a></div>
+          <div class="irow"><i class="fa-brands fa-linkedin text-sm w-4 text-center flex-shrink-0" style="color:var(--sable)"></i><a href="#" style="color:var(--creme);text-decoration:none">linkedin.com/in/bassirou-mbacke</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SKILLS ═══ -->
+<section id="skills" class="relative py-24 sm:py-32 px-[5vw]"
+  style="background:linear-gradient(180deg,#0a0908 0%,#0f0e0b 40%,#141210 100%)">
+  <div class="sec-grid"></div>
+
+  <div class="relative z-10">
+    <div class="flex items-center gap-3 mb-3">
+      <div class="w-7 h-px" style="background:var(--grd-sable)"></div>
+      <span style="font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sable);font-weight:500">Compétences</span>
+    </div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:300;letter-spacing:.02em;line-height:.9;margin-bottom:1.5rem">
+      Technologies<br><em class="grad-text">&amp; Outils</em>
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-14 items-start">
+      <!-- Icon grid -->
+      <div class="rv">
+        <p style="color:var(--argent);max-width:500px;line-height:1.8;font-size:.92rem;font-weight:300;margin-bottom:2rem">
+          Un arsenal de technologies soigneusement maîtrisées — du front-end moderne aux outils créatifs.
+        </p>
+        <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
+          <div class="ico-cell p-3"><i class="fa-brands fa-html5 text-3xl" style="color:#e44d26"></i><span style="font-size:.55rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase">HTML5</span></div>
+          <div class="ico-cell p-3"><i class="fa-brands fa-css3-alt text-3xl" style="color:#264de4"></i><span style="font-size:.55rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase">CSS3</span></div>
+          <div class="ico-cell p-3"><i class="fa-brands fa-js text-3xl" style="color:#f7df1e"></i><span style="font-size:.55rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase">JS</span></div>
+          <div class="ico-cell p-3"><i class="fa-brands fa-react text-3xl" style="color:#61dafb"></i><span style="font-size:.55rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase">React</span></div>
+          <div class="ico-cell p-3"><i class="fa-solid fa-wind text-3xl" style="color:#38bdf8"></i><span style="font-size:.55rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase">Tailwind</span></div>
+          <div class="ico-cell p-3"><i class="fa-brands fa-bootstrap text-3xl" style="color:#7952b3"></i><span style="font-size:.55rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase">Bootstrap</span></div>
+          <div class="ico-cell p-3"><i class="fa-brands fa-python text-3xl" style="color:#4584b6"></i><span style="font-size:.55rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase">Python</span></div>
+          <div class="ico-cell p-3"><i class="fa-brands fa-git-alt text-3xl" style="color:#f05032"></i><span style="font-size:.55rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase">Git</span></div>
+          <div class="ico-cell p-3"><i class="fa-brands fa-github text-3xl"></i><span style="font-size:.55rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase">GitHub</span></div>
+          <div class="ico-cell p-3"><i class="fa-solid fa-cloud-arrow-up text-3xl" style="color:#aaa"></i><span style="font-size:.55rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase">Vercel</span></div>
+          <div class="ico-cell p-3"><i class="fa-solid fa-pen-nib text-3xl" style="color:#ff9a00"></i><span style="font-size:.55rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase">Illustrator</span></div>
+          <div class="ico-cell p-3"><i class="fa-solid fa-layer-group text-3xl" style="color:#31a8ff"></i><span style="font-size:.55rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase">Photoshop</span></div>
+        </div>
+      </div>
+
+      <!-- Steps — WHITE THEME -->
+      <div class="relative steps-line flex flex-col gap-4 sm:gap-5">
+
+        <!-- Step 01 — Gauche sur desktop, colonne sur mobile -->
+        <div class="step-item fade-left grid gap-4" style="grid-template-columns:1fr 72px 1fr;align-items:center">
+          <!-- Card -->
+          <div class="step-card relative rounded-lg p-4 arrow-right col-start-1"
+            style="background:linear-gradient(145deg,#1e1e1e,#141414);border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 32px rgba(0,0,0,.5);transition:all .4s;border-top:2px solid rgba(255,255,255,.2)">
+            <span class="block text-2xl mb-2">💻</span>
+            <div style="font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600;margin-bottom:.25rem">Front-End</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:400;letter-spacing:.03em;margin-bottom:.7rem;color:#fff">Développement Web Core</div>
+            <div class="flex flex-wrap gap-2">
+              <span class="stag">HTML5</span><span class="stag">CSS3</span><span class="stag">JavaScript</span><span class="stag">React JS</span><span class="stag">React Native</span>
+            </div>
+          </div>
+          <!-- Center ribbon -->
+          <div class="flex justify-center items-center">
+            <div class="step-ribbon flex flex-col items-center justify-center py-3 px-2 w-[60px]"
+              style="background:linear-gradient(160deg,#2a2a2a,#1a1a1a);border:1px solid rgba(255,255,255,.15)">
+              <span style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:#fff;line-height:1">01</span>
+              <span style="font-size:.48rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.6)">STEP</span>
+            </div>
+          </div>
+          <div class="hidden sm:block"></div>
+        </div>
+
+        <!-- Step 02 — Droite sur desktop -->
+        <div class="step-item fade-right grid gap-4" style="grid-template-columns:1fr 72px 1fr;align-items:center">
+          <div class="hidden sm:block"></div>
+          <div class="flex justify-center items-center">
+            <div class="step-ribbon flex flex-col items-center justify-center py-3 px-2 w-[60px]"
+              style="background:linear-gradient(160deg,#2a2a2a,#1a1a1a);border:1px solid rgba(255,255,255,.15)">
+              <span style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:#fff;line-height:1">02</span>
+              <span style="font-size:.48rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.6)">STEP</span>
+            </div>
+          </div>
+          <div class="step-card relative rounded-lg p-4 arrow-left col-start-1 sm:col-start-3"
+            style="background:linear-gradient(145deg,#1e1e1e,#141414);border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 32px rgba(0,0,0,.5);transition:all .4s;border-top:2px solid rgba(255,255,255,.18)">
+            <span class="block text-2xl mb-2">🎨</span>
+            <div style="font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600;margin-bottom:.25rem">Frameworks CSS</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:400;letter-spacing:.03em;margin-bottom:.7rem;color:#fff">Design Systems</div>
+            <div class="flex flex-wrap gap-2">
+              <span class="stag">Tailwind CSS</span><span class="stag">Bootstrap</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 03 — Gauche -->
+        <div class="step-item fade-left grid gap-4" style="grid-template-columns:1fr 72px 1fr;align-items:center">
+          <div class="step-card relative rounded-lg p-4 arrow-right col-start-1"
+            style="background:linear-gradient(145deg,#1e1e1e,#141414);border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 32px rgba(0,0,0,.5);transition:all .4s;border-top:2px solid rgba(255,255,255,.18)">
+            <span class="block text-2xl mb-2">🐍</span>
+            <div style="font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600;margin-bottom:.25rem">Back-end &amp; Base de données</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:400;letter-spacing:.03em;margin-bottom:.7rem;color:#fff">Serveur &amp; Données</div>
+            <div class="flex flex-wrap gap-2">
+              <span class="stag">Python</span><span class="stag">Django</span><span class="stag">PostgreSQL</span><span class="stag">SQL</span><span class="stag">JWT / Firebase</span>
+            </div>
+          </div>
+          <div class="flex justify-center items-center">
+            <div class="step-ribbon flex flex-col items-center justify-center py-3 px-2 w-[60px]"
+              style="background:linear-gradient(160deg,#2a2a2a,#1a1a1a);border:1px solid rgba(255,255,255,.15)">
+              <span style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:#fff;line-height:1">03</span>
+              <span style="font-size:.48rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.6)">STEP</span>
+            </div>
+          </div>
+          <div class="hidden sm:block"></div>
+        </div>
+
+        <!-- Step 04 — Droite -->
+        <div class="step-item fade-right grid gap-4" style="grid-template-columns:1fr 72px 1fr;align-items:center">
+          <div class="hidden sm:block"></div>
+          <div class="flex justify-center items-center">
+            <div class="step-ribbon flex flex-col items-center justify-center py-3 px-2 w-[60px]"
+              style="background:linear-gradient(160deg,#2a2a2a,#1a1a1a);border:1px solid rgba(255,255,255,.15)">
+              <span style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:#fff;line-height:1">04</span>
+              <span style="font-size:.48rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.6)">STEP</span>
+            </div>
+          </div>
+          <div class="step-card relative rounded-lg p-4 arrow-left col-start-1 sm:col-start-3"
+            style="background:linear-gradient(145deg,#1e1e1e,#141414);border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 32px rgba(0,0,0,.5);transition:all .4s;border-top:2px solid rgba(255,255,255,.18)">
+            <span class="block text-2xl mb-2">🛠️</span>
+            <div style="font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600;margin-bottom:.25rem">Versioning &amp; Deploy</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:400;letter-spacing:.03em;margin-bottom:.7rem;color:#fff">DevTools</div>
+            <div class="flex flex-wrap gap-2">
+              <span class="stag">Git</span><span class="stag">GitHub</span><span class="stag">Vercel</span><span class="stag">Render</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 05 — Gauche -->
+        <div class="step-item fade-left grid gap-4" style="grid-template-columns:1fr 72px 1fr;align-items:center">
+          <div class="step-card relative rounded-lg p-4 arrow-right col-start-1"
+            style="background:linear-gradient(145deg,#1e1e1e,#141414);border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 32px rgba(0,0,0,.5);transition:all .4s;border-top:2px solid rgba(255,255,255,.18)">
+            <span class="block text-2xl mb-2">🎭</span>
+            <div style="font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600;margin-bottom:.25rem">Créativité</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:400;letter-spacing:.03em;margin-bottom:.7rem;color:#fff">Infographie &amp; Vidéo</div>
+            <div class="flex flex-wrap gap-2">
+              <span class="stag">Illustrator</span><span class="stag">Photoshop</span><span class="stag">CapCut</span>
+            </div>
+          </div>
+          <div class="flex justify-center items-center">
+            <div class="step-ribbon flex flex-col items-center justify-center py-3 px-2 w-[60px]"
+              style="background:linear-gradient(160deg,#2a2a2a,#1a1a1a);border:1px solid rgba(255,255,255,.15)">
+              <span style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:#fff;line-height:1">05</span>
+              <span style="font-size:.48rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.6)">STEP</span>
+            </div>
+          </div>
+          <div class="hidden sm:block"></div>
+        </div>
+
+      </div><!-- /steps -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FORMATION ═══ -->
+<section id="formation" class="relative py-24 sm:py-32 px-[5vw]"
+  style="background:linear-gradient(160deg,#0f0e0b 0%,#141210 30%,#1a1814 60%,#0f0e0b 100%)">
+  <div class="sec-grid"></div>
+  <div class="lamp lamp-top"><div class="lamp-halo"></div></div>
+
+  <div class="relative z-10">
+    <div class="flex items-center gap-3 mb-3">
+      <div class="w-7 h-px" style="background:var(--grd-sable)"></div>
+      <span style="font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sable);font-weight:500">Parcours</span>
+    </div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:300;letter-spacing:.02em;line-height:.9;margin-bottom:1.5rem">
+      Formation<br><em class="grad-text">&amp; Expérience</em>
+    </h2>
+
+    <div class="relative timeline mt-20 flex flex-col">
+      <!-- Item 1 -->
+      <div class="titem rv grid gap-8" style="grid-template-columns:3rem 1fr;padding:3rem 0;border-bottom:1px solid var(--border)">
+        <div class="flex flex-col items-center pt-1">
+          <div class="t-dot relative w-3 h-3 rounded-full flex-shrink-0" style="background:var(--grd-sable);box-shadow:0 0 20px rgba(212,196,160,.3)">
+            <div class="absolute" style="inset:-4px;border-radius:50%;border:1px solid rgba(212,196,160,.2)"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex flex-wrap items-center gap-3 mb-3">
+            <span style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--sable);background:rgba(212,196,160,.06);border:1px solid var(--border);padding:.2rem .7rem;border-radius:2px">2024 — 2025</span>
+            <span style="font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">Formation</span>
+          </div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;letter-spacing:.04em;color:var(--creme);margin-bottom:.3rem">Bakeli School of Technology</h3>
+          <div style="font-size:.78rem;color:var(--sable);margin-bottom:1rem;font-weight:500;letter-spacing:.06em">Développement Web &amp; Mobile</div>
+          <p style="color:var(--argent);font-size:.88rem;line-height:1.75;font-weight:300">Formation complète en développement Web &amp; Mobile : HTML, CSS, JS, React, React Native, Python, Django, PostgreSQL, intégration d'API REST, authentification JWT/Firebase et déploiement sur Vercel &amp; Render.</p>
+        </div>
+      </div>
+      <!-- Item 2 -->
+      <div class="titem rv grid gap-8" style="grid-template-columns:3rem 1fr;padding:3rem 0">
+        <div class="flex flex-col items-center pt-1">
+          <div class="t-dot relative w-3 h-3 rounded-full flex-shrink-0" style="background:var(--grd-sable);box-shadow:0 0 20px rgba(212,196,160,.3)">
+            <div class="absolute" style="inset:-4px;border-radius:50%;border:1px solid rgba(212,196,160,.2)"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex flex-wrap items-center gap-3 mb-3">
+            <span style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--sable);background:rgba(212,196,160,.06);border:1px solid var(--border);padding:.2rem .7rem;border-radius:2px">2025 · 3 mois</span>
+            <span style="font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">Stage</span>
+          </div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;letter-spacing:.04em;color:var(--creme);margin-bottom:.3rem">Volkeno</h3>
+          <div style="font-size:.78rem;color:var(--sable);margin-bottom:1rem;font-weight:500;letter-spacing:.06em">Développeur Front-End · Web &amp; Mobile</div>
+          <p style="color:var(--argent);font-size:.88rem;line-height:1.75;font-weight:300;margin-bottom:.5rem">3 mois en tant que Développeur Web &amp; Mobile Front-End. Projets livrés :</p>
+          <ul style="color:var(--argent);font-size:.85rem;line-height:1.75;padding-left:1.2rem">
+            <li><strong style="color:var(--sable2);font-weight:500">Red Product</strong> — App full-stack React + Django + PostgreSQL, auth JWT/Firebase, déployé sur Vercel/Render</li>
+            <li><strong style="color:var(--sable2);font-weight:500">Tektal</strong> — Application mobile React Native, intégration UI, navigation, collaboration équipe Agile</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROJECTS ═══ -->
+<section id="projets" class="relative py-24 sm:py-32 px-[5vw]"
+  style="background:linear-gradient(180deg,#0a0908 0%,#0d0c09 100%)">
+  <div class="sec-grid"></div>
+
+  <div class="relative z-10">
+    <div class="flex items-center gap-3 mb-3">
+      <div class="w-7 h-px" style="background:var(--grd-sable)"></div>
+      <span style="font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sable);font-weight:500">Portfolio</span>
+    </div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:300;letter-spacing:.02em;line-height:.9;margin-bottom:1rem">
+      Mes <em class="grad-text">Projets</em>
+    </h2>
+    <p class="rv" style="color:var(--argent);max-width:500px;line-height:1.8;font-size:.92rem;font-weight:300;margin-bottom:2rem">Web, design graphique et vidéo — mes meilleures réalisations.</p>
+
+    <!-- Filters -->
+    <div class="flex flex-wrap gap-2 mb-8">
+      <button class="pfbtn on" onclick="pf('all',this)">Tout voir</button>
+      <button class="pfbtn" onclick="pf('web',this)"><i class="fa-solid fa-code mr-1"></i>Web</button>
+      <button class="pfbtn" onclick="pf('design',this)"><i class="fa-solid fa-pen-nib mr-1"></i>Infographie</button>
+      <button class="pfbtn" onclick="pf('video',this)"><i class="fa-solid fa-video mr-1"></i>Vidéo</button>
+    </div>
+
+    <!-- Grid with gaps -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6" id="pgrid">
+
+      <!-- 1 Sunumango -->
+      <div class="pcard show fade-scale stagger-1" data-cat="web">
+        <div class="pthumb">
+          <div class="absolute inset-0 bg-[#0a0a0a]"></div>
+          <img src="sunumango.jpg" alt="Sunumango" onerror="this.style.display='none'">
+          <div class="phov">
+            <a href="https://www.sunumango.com" target="_blank" class="plnk"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+            <a href="https://github.com/cheikh234" target="_blank" class="plnk"><i class="fa-brands fa-github"></i></a>
+          </div>
+        </div>
+        <div class="p-5 flex-1">
+          <div style="font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;font-weight:500;margin-bottom:.4rem;color:var(--sable)">E-Commerce</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;letter-spacing:.04em;margin-bottom:.5rem;color:var(--creme)">Sunumango</h3>
+          <p style="font-size:.78rem;color:var(--argent);line-height:1.65;margin-bottom:.9rem;font-weight:300">Boutique en ligne complète : panier, filtres dynamiques, interface mobile-first.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="ppill" style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">React JS</span>
+            <span class="ppill" style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">Tailwind</span>
+            <span class="ppill" style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">JS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2 Bostlander -->
+      <div class="pcard show fade-scale stagger-2" data-cat="web">
+        <div class="pthumb">
+          <div class="absolute inset-0 bg-[#0a0a0a]"></div>
+          <img src="bostlander.jpg" alt="Bostlander" onerror="this.style.display='none'">
+          <div class="phov">
+            <a href="https://cheikh234.github.io/BOOTSLANDER/" target="_blank" class="plnk"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+            <a href="https://github.com/cheikh234/BOOTSLANDER" target="_blank" class="plnk"><i class="fa-brands fa-github"></i></a>
+          </div>
+        </div>
+        <div class="p-5 flex-1">
+          <div style="font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;font-weight:500;margin-bottom:.4rem;color:var(--sable)">Corporate</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;letter-spacing:.04em;margin-bottom:.5rem;color:var(--creme)">Bostlander</h3>
+          <p style="font-size:.78rem;color:var(--argent);line-height:1.65;margin-bottom:.9rem;font-weight:300">Site vitrine moderne avec animations avancées et formulaire de contact intégré.</p>
+          <div class="flex flex-wrap gap-2">
+            <span style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">HTML5</span>
+            <span style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">CSS3</span>
+            <span style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">JS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 Parana -->
+      <div class="pcard show fade-scale stagger-3" data-cat="web">
+        <div class="pthumb">
+          <div class="absolute inset-0 bg-[#0a0a0a]"></div>
+          <img src="parana.jpg" alt="Parana" onerror="this.style.display='none'">
+          <div class="phov">
+            <a href="https://cheikh234.github.io/cloneparada/" target="_blank" class="plnk"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+            <a href="https://github.com/cheikh234/cloneparada" target="_blank" class="plnk"><i class="fa-brands fa-github"></i></a>
+          </div>
+        </div>
+        <div class="p-5 flex-1">
+          <div style="font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;font-weight:500;margin-bottom:.4rem;color:var(--sable)">Web App</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;letter-spacing:.04em;margin-bottom:.5rem;color:var(--creme)">Parana</h3>
+          <p style="font-size:.78rem;color:var(--argent);line-height:1.65;margin-bottom:.9rem;font-weight:300">Application web avec interface intuitive, gestion de données et déploiement cloud.</p>
+          <div class="flex flex-wrap gap-2">
+            <span style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">React JS</span>
+            <span style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">Bootstrap</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 Reacttt -->
+      <div class="pcard show fade-scale stagger-4" data-cat="web">
+        <div class="pthumb">
+          <div class="absolute inset-0 bg-[#0a0a0a]"></div>
+          <img src="reacttt.jpg" alt="Reacttt" onerror="this.style.display='none'">
+          <div class="phov">
+            <a href="https://ocas-nu.vercel.app/" target="_blank" class="plnk"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+            <a href="https://github.com/cheikh234" target="_blank" class="plnk"><i class="fa-brands fa-github"></i></a>
+          </div>
+        </div>
+        <div class="p-5 flex-1">
+          <div style="font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;font-weight:500;margin-bottom:.4rem;color:var(--sable)">Front-End</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;letter-spacing:.04em;margin-bottom:.5rem;color:var(--creme)">Reacttt</h3>
+          <p style="font-size:.78rem;color:var(--argent);line-height:1.65;margin-bottom:.9rem;font-weight:300">Projet React avancé avec composants réutilisables, hooks et state management.</p>
+          <div class="flex flex-wrap gap-2">
+            <span style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">React JS</span>
+            <span style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">Tailwind</span>
+            <span style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">Vercel</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5 Selecao -->
+      <div class="pcard show fade-scale stagger-5" data-cat="web">
+        <div class="pthumb">
+          <div class="absolute inset-0 bg-[#0a0a0a]"></div>
+          <img src="selecao.jpg" alt="Selecao" onerror="this.style.display='none'">
+          <div class="phov">
+            <a href="https://cheikh234.github.io/seleco/" target="_blank" class="plnk"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+            <a href="https://github.com/cheikh234/seleco" target="_blank" class="plnk"><i class="fa-brands fa-github"></i></a>
+          </div>
+        </div>
+        <div class="p-5 flex-1">
+          <div style="font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;font-weight:500;margin-bottom:.4rem;color:var(--sable)">Stage · Volkeno</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;letter-spacing:.04em;margin-bottom:.5rem;color:var(--creme)">Selecao</h3>
+          <p style="font-size:.78rem;color:var(--argent);line-height:1.65;margin-bottom:.9rem;font-weight:300">App full-stack avec authentification, CRUD complet, déployé sur Vercel + Render.</p>
+          <div class="flex flex-wrap gap-2">
+            <span style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">React JS</span>
+            <span style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">Django</span>
+            <span style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">PostgreSQL</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6 Infographie galerie -->
+      <div class="pcard show fade-scale" data-cat="design" style="cursor:pointer" onclick="openLightbox(0)">
+        <div class="pthumb" style="background:#111008">
+          <div class="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-[2px] p-2 z-10">
+            <img src="yango.jpg" alt="Yango" class="w-full h-full object-cover rounded opacity-85" onerror="this.style.display='none'">
+            <img src="orange.jpg" alt="Orange" class="w-full h-full object-cover rounded opacity-85" onerror="this.style.display='none'">
+            <img src="kirene.jpg" alt="Kirene" class="w-full h-full object-cover rounded opacity-85" onerror="this.style.display='none'">
+            <div class="grid grid-rows-2 gap-[2px]">
+              <img src="sengal.jpg" alt="Sengal" class="w-full h-full object-cover rounded opacity-85" onerror="this.style.display='none'">
+              <img src="delice.jpg" alt="Delice" class="w-full h-full object-cover rounded opacity-85" onerror="this.style.display='none'">
+            </div>
+          </div>
+          <div class="absolute top-2 right-2 z-20 text-xs px-2 py-1 rounded" style="background:rgba(212,196,160,.15);border:1px solid rgba(212,196,160,.35);color:var(--sable2);font-size:.58rem;letter-spacing:.1em;backdrop-filter:blur(6px)">
+            <i class="fa-solid fa-images mr-1"></i> 5 visuels
+          </div>
+          <div class="phov flex-col gap-2">
+            <i class="fa-solid fa-expand text-2xl" style="color:var(--sable2)"></i>
+            <span style="font-size:.65rem;letter-spacing:.18em;color:var(--sable);text-transform:uppercase">Ouvrir la galerie</span>
+          </div>
+        </div>
+        <div class="p-5 flex-1">
+          <div style="font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;font-weight:500;margin-bottom:.4rem;color:var(--sable)">Infographie · 5 créations</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;letter-spacing:.04em;margin-bottom:.5rem;color:var(--creme)">Identité Visuelle</h3>
+          <p style="font-size:.78rem;color:var(--argent);line-height:1.65;margin-bottom:.9rem;font-weight:300">Yango · Orange · Kirene · Sengal · Délice — visuels pour réseaux sociaux.</p>
+          <div class="flex flex-wrap gap-2">
+            <span style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">Illustrator</span>
+            <span style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">Photoshop</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7 React Native vidéo -->
+      <div class="pcard show fade-scale" data-cat="video">
+        <div class="pthumb" style="cursor:pointer" onclick="openVidModal()">
+          <div class="absolute inset-0" style="background:linear-gradient(135deg,#0d1018,#181f2a)"></div>
+          <video src="reactnative.mp4" id="vid-rn" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300" muted loop playsinline preload="metadata" style="pointer-events:none"></video>
+          <div id="vid-rn-poster" class="absolute inset-0 flex flex-col items-center justify-center gap-3 transition-opacity duration-300 pointer-events-none">
+            <i class="fa-brands fa-react text-[3.5rem]" style="color:#61dafb;filter:drop-shadow(0 0 20px rgba(97,218,251,.3))"></i>
+            <span style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)">React Native</span>
+          </div>
+          <div class="absolute inset-0 flex items-center justify-center z-10" style="background:rgba(8,8,8,.3)">
+            <div class="w-14 h-14 rounded-full flex items-center justify-center" style="background:rgba(212,196,160,.15);border:1.5px solid rgba(212,196,160,.6);backdrop-filter:blur(8px);box-shadow:0 0 30px rgba(212,196,160,.15)">
+              <i class="fa-solid fa-expand" style="color:var(--sable2)"></i>
+            </div>
+          </div>
+        </div>
+        <div class="p-5 flex-1">
+          <div style="font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;font-weight:500;margin-bottom:.4rem;color:var(--sable)">Stage · Volkeno · Mobile</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;letter-spacing:.04em;margin-bottom:.5rem;color:var(--creme)">React Native App</h3>
+          <p style="font-size:.78rem;color:var(--argent);line-height:1.65;margin-bottom:.9rem;font-weight:300">Application mobile complète — UI, navigation, collaboration équipe Agile.</p>
+          <div class="flex flex-wrap gap-2">
+            <span style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">React Native</span>
+            <span style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">JS</span>
+            <span style="font-size:.6rem;letter-spacing:.08em;background:rgba(212,196,160,.04);border:1px solid var(--border);border-radius:2px;padding:.18rem .55rem;color:var(--dim)">UI/UX</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══ -->
+<section id="contact" class="relative py-24 sm:py-32 px-[5vw]"
+  style="background:linear-gradient(180deg,#0d0c09 0%,#0a0908 50%,#111008 100%)">
+  <div class="sec-grid"></div>
+  <div class="lamp lamp-top"><div class="lamp-halo"></div></div>
+
+  <div class="relative z-10">
+    <div class="flex items-center gap-3 mb-3">
+      <div class="w-7 h-px" style="background:var(--grd-sable)"></div>
+      <span style="font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sable);font-weight:500">Contact</span>
+    </div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:300;letter-spacing:.02em;line-height:.9;margin-bottom:1.5rem">
+      Travaillons<br><em class="grad-text">ensemble</em>
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 mt-16 items-start">
+      <!-- Left -->
+      <div class="rv">
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;letter-spacing:.04em;line-height:1.2;margin-bottom:1.2rem">
+          Vous avez un projet ?<br><em class="grad-text">Je suis disponible.</em>
+        </h3>
+        <p style="color:var(--argent);line-height:1.8;margin-bottom:2.5rem;font-size:.9rem;font-weight:300">
+          Développement web &amp; mobile, design UI/UX, montage vidéo ou opportunité d'emploi — je réponds vite et efficacement.
+        </p>
+        <div class="flex flex-col gap-3">
+          <a href="tel:+221776616619" class="clink"><div class="w-9 h-9 rounded-sm flex items-center justify-center flex-shrink-0" style="background:rgba(212,196,160,.06);border:1px solid var(--border)"><i class="fa-solid fa-phone text-sm" style="color:var(--sable)"></i></div><div><div style="font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)">Téléphone</div><div style="font-size:.85rem;font-weight:400;margin-top:.1rem;color:var(--creme)">+221 77 661 66 19</div></div><i class="fa-solid fa-chevron-right ml-auto text-xs" style="color:var(--dim)"></i></a>
+          <a href="mailto:cheikhbass2001@gmail.com" class="clink"><div class="w-9 h-9 rounded-sm flex items-center justify-center flex-shrink-0" style="background:rgba(212,196,160,.06);border:1px solid var(--border)"><i class="fa-solid fa-envelope text-sm" style="color:var(--sable)"></i></div><div><div style="font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)">Email</div><div style="font-size:.85rem;font-weight:400;margin-top:.1rem;color:var(--creme)">cheikhbass2001@gmail.com</div></div><i class="fa-solid fa-chevron-right ml-auto text-xs" style="color:var(--dim)"></i></a>
+          <a href="#" class="clink"><div class="w-9 h-9 rounded-sm flex items-center justify-center flex-shrink-0" style="background:rgba(212,196,160,.06);border:1px solid var(--border)"><i class="fa-brands fa-github text-sm" style="color:var(--sable)"></i></div><div><div style="font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)">GitHub</div><div style="font-size:.85rem;font-weight:400;margin-top:.1rem;color:var(--creme)">github.com/bassirou-mbacke</div></div><i class="fa-solid fa-chevron-right ml-auto text-xs" style="color:var(--dim)"></i></a>
+          <a href="#" class="clink"><div class="w-9 h-9 rounded-sm flex items-center justify-center flex-shrink-0" style="background:rgba(212,196,160,.06);border:1px solid var(--border)"><i class="fa-brands fa-whatsapp text-sm" style="color:#25d366"></i></div><div><div style="font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)">WhatsApp</div><div style="font-size:.85rem;font-weight:400;margin-top:.1rem;color:var(--creme)">+221 77 661 66 19</div></div><i class="fa-solid fa-chevron-right ml-auto text-xs" style="color:var(--dim)"></i></a>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="rv flex flex-col gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="flex flex-col gap-2"><label style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)">Prénom</label><input class="fi" type="text" placeholder="Jean"></div>
+          <div class="flex flex-col gap-2"><label style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)">Nom</label><input class="fi" type="text" placeholder="Dupont"></div>
+        </div>
+        <div class="flex flex-col gap-2"><label style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)">Email</label><input class="fi" type="email" placeholder="jean@exemple.com"></div>
+        <div class="flex flex-col gap-2"><label style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)">Sujet</label><input class="fi" type="text" placeholder="Projet web, collaboration..."></div>
+        <div class="flex flex-col gap-2"><label style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)">Message</label><textarea class="fta" placeholder="Décrivez votre projet..."></textarea></div>
+        <button class="fsub" id="fsub"><i class="fa-solid fa-paper-plane"></i>Envoyer le message</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT BANNER ═══ -->
+<section class="relative py-16 px-[5vw]" style="background:var(--noir)">
+  <div class="sec-grid"></div>
+  <div class="rv relative z-10 border rounded-lg p-8 sm:p-14 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 overflow-hidden"
+    style="border-color:var(--border);background:linear-gradient(135deg,#111008 0%,#1a1814 40%,#111008 100%)">
+    <div style="position:absolute;top:0;left:0;right:0;height:1px;background:var(--grd-sable);opacity:.3"></div>
+    <div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;letter-spacing:.04em;line-height:1.1;margin-bottom:.6rem">
+        Connectons-nous<br><em class="grad-text">sur les réseaux !</em>
+      </h2>
+      <p style="color:var(--argent);font-size:.88rem;line-height:1.6;font-weight:300">Dev Web &amp; Mobile · Graphiste · Sénégal 🇸🇳</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <a href="tel:+221776616619" class="c2soc"><i class="fa-solid fa-phone" style="color:var(--sable)"></i>Téléphone</a>
+      <a href="mailto:cheikhbass2001@gmail.com" class="c2soc"><i class="fa-solid fa-envelope" style="color:var(--sable)"></i>Email</a>
+      <a href="#" class="c2soc"><i class="fa-brands fa-github" style="color:var(--sable)"></i>GitHub</a>
+      <a href="#" class="c2soc"><i class="fa-brands fa-linkedin" style="color:#0a66c2"></i>LinkedIn</a>
+      <a href="#" class="c2soc"><i class="fa-brands fa-whatsapp" style="color:#25d366"></i>WhatsApp</a>
+      <a href="#" class="c2soc"><i class="fa-brands fa-instagram" style="color:#e1306c"></i>Instagram</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="flex flex-wrap items-center justify-between gap-4 px-[5vw] py-6 border-t" style="border-color:var(--border);background:var(--noir)">
+  <div class="grad-text" style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:300;letter-spacing:.18em">B. Mbacké</div>
+  <p style="font-size:.65rem;color:var(--dim);letter-spacing:.08em">© 2025 Bassirou Mbacké — Dev Web &amp; Mobile · Graphiste · Dakar 🇸🇳</p>
+  <div class="flex gap-2">
+    <a href="#" class="fsoc"><i class="fa-brands fa-github"></i></a>
+    <a href="#" class="fsoc"><i class="fa-brands fa-linkedin"></i></a>
+    <a href="#" class="fsoc"><i class="fa-brands fa-instagram"></i></a>
+    <a href="mailto:cheikhbass2001@gmail.com" class="fsoc"><i class="fa-solid fa-envelope"></i></a>
+  </div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <div onclick="closeLightbox()" class="absolute top-5 right-5 w-11 h-11 rounded-full flex items-center justify-center cursor-pointer transition-all hover:scale-110 z-10" style="background:rgba(212,196,160,.1);border:1px solid rgba(212,196,160,.3);color:var(--sable2)"><i class="fa-solid fa-xmark"></i></div>
+  <div class="relative flex items-center justify-center" style="width:min(90vw,900px);max-height:80vh">
+    <div onclick="lbNav(-1)" class="absolute -left-16 sm:-left-16 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer" style="background:rgba(212,196,160,.1);border:1px solid rgba(212,196,160,.25);color:var(--sable2);transition:all .3s"><i class="fa-solid fa-chevron-left"></i></div>
+    <img class="lb-img" id="lb-img" src="" alt="" style="animation:lbIn .4s cubic-bezier(.16,1,.3,1)">
+    <div onclick="lbNav(1)" class="absolute -right-16 sm:-right-16 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer" style="background:rgba(212,196,160,.1);border:1px solid rgba(212,196,160,.25);color:var(--sable2);transition:all .3s"><i class="fa-solid fa-chevron-right"></i></div>
+  </div>
+  <div class="mt-6 flex flex-col items-center gap-3">
+    <div id="lb-title" class="grad-text" style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;letter-spacing:.15em"></div>
+    <div id="lb-dots" class="flex gap-2"></div>
+    <div id="lb-count" style="font-size:.65rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase"></div>
+  </div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div id="vid-modal">
+  <div onclick="closeVidModal()" class="absolute top-5 right-5 w-11 h-11 rounded-full flex items-center justify-center cursor-pointer transition-all hover:scale-110 z-10" style="background:rgba(212,196,160,.1);border:1px solid rgba(212,196,160,.3);color:var(--sable2)"><i class="fa-solid fa-xmark"></i></div>
+  <video id="vid-modal-player" src="reactnative.mp4" controls style="max-width:min(90vw,1000px);max-height:82vh;border-radius:4px;box-shadow:0 40px 100px rgba(0,0,0,.9)"></video>
+  <div class="mt-4 grad-text" style="font-family:'Cormorant Garamond',serif;font-size:1rem;letter-spacing:.2em">React Native App — Volkeno</div>
+</div>
+
+<!-- CDN Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+/* ── LOADER ── */
+window.addEventListener('load', () => setTimeout(() => document.getElementById('ld').classList.add('gone'), 2000));
+
+/* ── CURSOR ── */
+const cur1 = document.getElementById('cur1'), cur2 = document.getElementById('cur2');
+let mx = 0, my = 0, tx = 0, ty = 0;
+if (window.innerWidth > 768) {
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  (function loop() {
+    if (cur1) cur1.style.transform = `translate(${mx - 4}px,${my - 4}px)`;
+    tx += (mx - tx) * .08; ty += (my - ty) * .08;
+    if (cur2) cur2.style.transform = `translate(${tx - 18}px,${ty - 18}px)`;
+    requestAnimationFrame(loop);
+  })();
+  document.querySelectorAll('a,button,.pcard,.ico-cell,.hstat,.portrait-frame,.clink').forEach(el => {
+    el.addEventListener('mouseenter', () => cur2 && cur2.classList.add('expand'));
+    el.addEventListener('mouseleave', () => cur2 && cur2.classList.remove('expand'));
+  });
+}
+
+/* ── HAMBURGER ── */
+let menuOpen = false;
+function toggleMenu() {
+  menuOpen = !menuOpen;
+  const mob = document.querySelector('#nlinks.translate-x-full') || document.querySelectorAll('#nlinks')[1];
+  const mobileMenu = document.querySelectorAll('#nlinks')[1] || document.getElementById('mobile-menu');
+  // Find the mobile-only nlinks
+  const allNlinks = document.querySelectorAll('#nlinks');
+  allNlinks.forEach(nl => {
+    if (nl.classList.contains('fixed')) {
+      nl.classList.toggle('translate-x-full', !menuOpen);
+      nl.style.transform = menuOpen ? 'none' : '';
+    }
+  });
+  const h1 = document.getElementById('ham1'), h2 = document.getElementById('ham2'), h3 = document.getElementById('ham3');
+  if (menuOpen) {
+    if(h1){h1.style.transform='translateY(6.5px) rotate(45deg)'}
+    if(h2){h2.style.opacity='0';h2.style.transform='scaleX(0)'}
+    if(h3){h3.style.transform='translateY(-6.5px) rotate(-45deg)'}
+  } else {
+    if(h1){h1.style.transform=''}
+    if(h2){h2.style.opacity='';h2.style.transform=''}
+    if(h3){h3.style.transform=''}
+  }
+}
+function closeMenu() {
+  menuOpen = false;
+  document.querySelectorAll('#nlinks').forEach(nl => {
+    if (nl.classList.contains('fixed')) nl.style.transform = '';
+  });
+  const h1 = document.getElementById('ham1'), h2 = document.getElementById('ham2'), h3 = document.getElementById('ham3');
+  if(h1)h1.style.transform='';
+  if(h2){h2.style.opacity='';h2.style.transform=''}
+  if(h3)h3.style.transform='';
+}
+
+/* ── NAV SCROLL ── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('sc', scrollY > 50));
+
+/* ── REVEAL ── */
+const obs = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('vis'); obs.unobserve(e.target); }
+}), { threshold: .08 });
+document.querySelectorAll('.rv,.step-item,.titem,.fade-left,.fade-right,.fade-scale').forEach(el => obs.observe(el));
+
+/* ── PROJECT FILTER ── */
+function pf(cat, btn) {
+  document.querySelectorAll('.pfbtn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  let delay = 0;
+  document.querySelectorAll('.pcard').forEach(c => {
+    const show = cat === 'all' || c.dataset.cat === cat;
+    if (show) {
+      c.style.display = 'flex';
+      c.style.opacity = '0'; c.style.transform = 'scale(.95) translateY(12px)';
+      setTimeout(() => { c.style.transition = 'all .5s cubic-bezier(.16,1,.3,1)'; c.style.opacity = '1'; c.style.transform = 'none'; }, delay);
+      delay += 60;
+    } else {
+      c.style.display = 'none';
+    }
+  });
+}
+
+/* ── FORM SUBMIT ── */
+document.getElementById('fsub').addEventListener('click', function () {
+  this.innerHTML = '<i class="fa-solid fa-check mr-2"></i>Message envoyé !';
+  this.style.background = 'linear-gradient(135deg,#166534,#15803d)';
+  setTimeout(() => { this.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i>Envoyer le message'; this.style.background = ''; }, 3500);
+});
+
+/* ── VIDEO HOVER ── */
+const vid = document.getElementById('vid-rn');
+const poster = document.getElementById('vid-rn-poster');
+if (vid) {
+  vid.addEventListener('loadeddata', () => { vid.style.opacity = '1'; if (poster) poster.style.opacity = '0'; });
+  const wrap = vid.closest('.pthumb');
+  if (wrap) {
+    wrap.addEventListener('mouseenter', () => { try { vid.play(); } catch (e) { } });
+    wrap.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
+  }
+}
+
+/* ── VIDEO MODAL ── */
+function openVidModal() {
+  const modal = document.getElementById('vid-modal');
+  const player = document.getElementById('vid-modal-player');
+  modal.classList.add('open'); document.body.style.overflow = 'hidden';
+  try { player.play(); } catch (e) { }
+}
+function closeVidModal() {
+  const modal = document.getElementById('vid-modal');
+  const player = document.getElementById('vid-modal-player');
+  modal.classList.remove('open'); document.body.style.overflow = '';
+  player.pause(); player.currentTime = 0;
+}
+document.getElementById('vid-modal').addEventListener('click', function (e) { if (e.target === this) closeVidModal(); });
+
+/* ── LIGHTBOX ── */
+const lbImages = [
+  { src: 'yango.jpg', title: 'Yango' },
+  { src: 'orange.jpg', title: 'Orange' },
+  { src: 'kirene.jpg', title: 'Kirene' },
+  { src: 'sengal.jpg', title: 'Sengal Délice' },
+  { src: 'delice.jpg', title: 'Délice' },
+];
+let lbIndex = 0;
+function openLightbox(i) { lbIndex = i; document.getElementById('lightbox').classList.add('open'); document.body.style.overflow = 'hidden'; renderLb(); }
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); document.body.style.overflow = ''; }
+function lbNav(dir) { lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length; renderLb(); }
+function renderLb() {
+  const img = document.getElementById('lb-img');
+  img.style.opacity = '0'; img.style.transform = 'scale(.93)';
+  setTimeout(() => { img.src = lbImages[lbIndex].src; img.style.transition = 'opacity .35s,transform .35s'; img.style.opacity = '1'; img.style.transform = 'scale(1)'; }, 160);
+  document.getElementById('lb-title').textContent = lbImages[lbIndex].title;
+  document.getElementById('lb-count').textContent = `${lbIndex + 1} / ${lbImages.length}`;
+  document.getElementById('lb-dots').innerHTML = lbImages.map((_, i) => `<div class="lb-dot${i === lbIndex ? ' on' : ''}" onclick="lbIndex=${i};renderLb()"></div>`).join('');
+}
+document.addEventListener('keydown', e => {
+  if (document.getElementById('lightbox').classList.contains('open')) {
+    if (e.key === 'ArrowRight') lbNav(1);
+    if (e.key === 'ArrowLeft') lbNav(-1);
+    if (e.key === 'Escape') closeLightbox();
+  }
+  if (document.getElementById('vid-modal').classList.contains('open') && e.key === 'Escape') closeVidModal();
+});
+document.getElementById('lightbox').addEventListener('click', function (e) { if (e.target === this) closeLightbox(); });
+let tX2 = 0;
+document.getElementById('lightbox').addEventListener('touchstart', e => { tX2 = e.touches[0].clientX; }, { passive: true });
+document.getElementById('lightbox').addEventListener('touchend', e => { const d = e.changedTouches[0].clientX - tX2; if (Math.abs(d) > 50) lbNav(d < 0 ? 1 : -1); });
+
+/* ── PARALLAX ── */
+window.addEventListener('scroll', () => {
+  const y = scrollY;
+  document.querySelectorAll('.hero-beam').forEach((b, i) => b.style.transform = `rotate(-15deg) translateY(${y * (.04 + i * .02)}px)`);
+  const mesh = document.querySelector('.hero-mesh');
+  if (mesh) mesh.style.transform = `translateY(${y * .04}px)`;
+});
+
+/* ── MOBILE MENU FIX ── */
+// Simpler approach: direct ID-based toggle
+document.getElementById('ham').addEventListener('click', function(e) {
+  e.stopPropagation();
+});
+// Find mobile nlinks specifically
+window._mobileMenu = null;
+document.querySelectorAll('#nlinks').forEach(nl => {
+  if(getComputedStyle(nl).position === 'fixed' || nl.style.position === 'fixed') {
+    window._mobileMenu = nl;
+  }
+});
+</script>
+<script src="https://cdn.tailwindcss.com"></script>
+</body>
+</html>
